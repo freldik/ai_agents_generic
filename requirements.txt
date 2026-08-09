@@ -1,0 +1,13 @@
+# Tabulky a data
+pandas
+openpyxl
+xlsxwriter
+
+# Web / API
+requests
+beautifulsoup4
+yfinance
+
+# Dokumenty
+python-docx
+Markdown

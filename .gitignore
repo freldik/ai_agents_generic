@@ -1,0 +1,17 @@
+# Prostředí
+.venv/
+__pycache__/
+*.pyc
+
+# Citlivé — data se jinak verzují záměrně
+secrets/
+*_private.*
+.env
+
+# Excel/Office dočasné soubory
+~$*
+*.tmp
+
+# Obsidian — workspace je per-stroj
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
