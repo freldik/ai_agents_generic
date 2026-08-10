@@ -1,0 +1,67 @@
+{
+  "_comment": "Strojově čitelná část inventury záloh. Lidská verze je data/inventory.md — id musí souhlasit v obou. Cesty jsou specifické pro tento stroj.",
+  "backup_root": "D:/Work/Backup",
+  "items": [
+    {
+      "id": "data-others",
+      "nazev": "D:\\Others -> RAR",
+      "kontrola": "D:/Work/Backup/Data",
+      "glob": "**/Others_*.rar",
+      "interval_dnu": 90
+    },
+    {
+      "id": "data-projects",
+      "nazev": "D:\\Projects -> RAR",
+      "kontrola": "D:/Work/Backup/Data",
+      "glob": "**/Projects_*.rar",
+      "interval_dnu": 90
+    },
+    {
+      "id": "home-assistant",
+      "nazev": "Home Assistant cloudová záloha -> lokál",
+      "kontrola": "D:/Work/Backup/HomeAssistant",
+      "glob": "*.tar",
+      "interval_dnu": 90
+    },
+    {
+      "id": "router",
+      "nazev": "Konfigurace routerů a AP v domě",
+      "kontrola": "D:/Work/Backup/Router",
+      "glob": "**/*",
+      "interval_dnu": 90
+    },
+    {
+      "id": "goodsync",
+      "nazev": "Konfigurace GoodSync (joby)",
+      "kontrola": "D:/Work/Backup/GoodSync",
+      "glob": "good_sync_*",
+      "interval_dnu": 90
+    },
+    {
+      "id": "totalcmd",
+      "nazev": "Konfigurace Total Commander",
+      "kontrola": "D:/Work/Backup/Total Commander",
+      "glob": "**/*.ini",
+      "interval_dnu": 90
+    },
+    {
+      "id": "thunderbird",
+      "nazev": "Export e-mailů z Thunderbirdu",
+      "kontrola": "D:/Work/Backup/Thunderbird",
+      "glob": "**/*",
+      "interval_dnu": 90
+    },
+    {
+      "id": "wdmycloud",
+      "nazev": "Nastavení síťového disku WD MyCloud",
+      "kontrola": "D:/Work/Backup/WD MyCloud",
+      "glob": "*.conf",
+      "interval_dnu": 90
+    }
+  ],
+  "zdroje_konfiguraci": {
+    "goodsync": "C:/Users/Marek Frelich/AppData/Roaming/GoodSync",
+    "totalcmd": "C:/Users/Marek Frelich/AppData/Roaming/GHISLER",
+    "thunderbird_profily": "C:/Users/Marek Frelich/AppData/Roaming/Thunderbird/Profiles"
+  }
+}
