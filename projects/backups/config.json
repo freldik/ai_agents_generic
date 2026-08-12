@@ -52,6 +52,13 @@
       "interval_dnu": 90
     },
     {
+      "id": "todoist",
+      "nazev": "Upomínky a úkoly z Todoistu",
+      "kontrola": "D:/Work/Backup/Todoist",
+      "glob": "**/*",
+      "interval_dnu": 90
+    },
+    {
       "id": "wdmycloud",
       "nazev": "Nastavení síťového disku WD MyCloud",
       "kontrola": "D:/Work/Backup/WD MyCloud",

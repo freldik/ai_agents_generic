@@ -2,26 +2,33 @@
 
 Dohodnuto 2026-08-10. Cíl: ať je ruční jen to, co opravdu nejde jinak.
 
-## 1. Naplánované úlohy Windows
+## 1. Čtvrtletní běh skriptů — `zalohy_ctvrtletni.bat`
 
-Vytvoří je `scripts/install_tasks.ps1 -Install`, zruší `-Uninstall`.
-Všechny běží pod tvým účtem (potřebují `M:`, `%APPDATA%`) a mají zapnuté
-„spustit při nejbližší příležitosti", takže vypnutý počítač je jen odklad.
+**V Plánovači úloh Windows není naplánované nic** (rozhodnuto 2026-08-12). Skripty
+pouštíš ručně jedním dávkovým souborem, který je provede po sobě a vypisuje průběh
+na obrazovku — kdykoli se dá zastavit Ctrl+C.
 
-| Kdy | Úloha | Co dělá | Jak dlouho |
-|---|---|---|---|
-| 1. každý měsíc ve 20:30 | Zálohy - konfigurace | GoodSync, Total Commander, nastavení Thunderbirdu | vteřiny |
-| 1. každý měsíc ve 20:35 | Zálohy - seznam GoodSync jobů | přepíše dokumentaci z `jobs.tic` | vteřiny |
-| 2. 1. / 4. / 7. / 10. ve 20:00 | Zálohy - RAR archivy | `backup_data.bat` — Others + Projects do `Data\<Kategorie>\` | hodiny |
-| 3. každý měsíc ve 20:00 | Zálohy - retence (jen report) | vypíše archivy nad rámec 4+1/rok do `D:\Work\Backup\Data\_log\retence_report.md` | vteřiny |
-| každé pondělí v 18:00 | Zálohy - kontrola stavu | `status.py --md` — co je po termínu | vteřiny |
+```
+projects\backups\scripts\zalohy_ctvrtletni.bat
+```
 
-Dny jdou schválně po sobě. **1.** je tvůj ruční večer (USB, GoodSync, čtvrtletní
-exporty) a drobné úlohy k němu; **2.** běží RAR archivace, která trvá hodiny a
-nemá ti do toho večera lézt; **3.** vznikne report retence, který tak už vidí
-i čerstvý archiv z předchozího dne.
+| Krok | Co dělá | Jak dlouho |
+|---|---|---|
+| 1 | `status.py` — co je po termínu ještě před zálohou | vteřiny |
+| 2 | `backup_configs.py` — GoodSync, Total Commander, nastavení Thunderbirdu | vteřiny |
+| 3 | `backup_data.bat` — Others + Projects do `Data\<Kategorie>\` | **hodiny** |
+| 4 | `goodsync_jobs.py` — přepíše dokumentaci jobů z `jobs.tic` | vteřiny |
+| 5 | `retention.py --out` — report archivů nad rámec 4+1/rok, **nic nemaže** | vteřiny |
+| 6 | `status.py --md` — stav po záloze do `data/status_*.md` | vteřiny |
 
-**Retence nikdy nemaže sama.** Report jen řekne co a kolik; smazání spouštíš ty
+Pouštěj to **večer** kvůli kroku 3. Průběh se loguje do
+`D:\Work\Backup\Data\_log\zalohy_RRRR-MM-DD.log`.
+
+Automatizace přes Plánovač je vědomě zahozená: ruční běh je vidět, dá se zastavit
+a nespustí hodinovou archivaci ve chvíli, kdy se to nehodí. Cenou je, že termín si
+hlídáš sám — od toho je připomínka v kalendáři.
+
+**Retence nikdy nemaže sama.** Krok 5 jen řekne co a kolik; smazání spouštíš zvlášť
 (`retention.py --delete`, ptá se na potvrzení). Tak to má zůstat.
 
 Čtvrtletní RAR je záměr, ne kompromis: archiv má ~20 GB a kompletní data jsou i tak
@@ -43,11 +50,11 @@ ne „až si vzpomenu". Proto **1. v měsíci je zálohovací den**.
 | **Disk WD** (USB My Passport) | 8 | **při připojení disku** — USB připojuješ 1. v měsíci | Auto → *On Device Connect* |
 
 Jen OneDrive je bezpečné pouštět denně: je to lokální disk `D:`, žádná síť.
-22:00 je schválně po naplánovaných úlohách ve 20:00–20:35.
+22:00 je schválně pozdě večer, ať nekoliduje s ničím, co pouštíš ručně.
 
 **Zálohovací den 1. v měsíci** je tedy: připojit USB (rozjede se samo), v GoodSyncu
-ručně spustit skupiny Cloud, Ntb a Monika, nechat doběhnout. Naplánované úlohy
-(konfigurace, seznam jobů) běží tentýž večer samy.
+ručně spustit skupiny Cloud, Ntb a Monika, nechat doběhnout. Čtyřikrát do roka
+k tomu přidáš `zalohy_ctvrtletni.bat` a ruční exporty ze sekce 3.
 
 GoodSync startuje s Windows, takže se nic neplánuje ve Správci úloh — periodicita
 se nastavuje v jobech samotných.
@@ -73,16 +80,19 @@ v GoodSyncu.
 | **čtvrtletně** | 1. 1. / 4. / 7. / 10. | **routery a AP**: export konfigurace (Mikrotik Attic, TP-Link Archer AX10 Obývák a Hůra, opakovače) | `D:\Work\Backup\Router\<zařízení>\` |
 | **čtvrtletně** | 1. 1. / 4. / 7. / 10. | **WD MyCloud**: export nastavení `.conf` | `D:\Work\Backup\WD MyCloud\` |
 | **čtvrtletně** | 1. 1. / 4. / 7. / 10. | **Thunderbird**: export pošty obou účtů | `D:\Work\Backup\Thunderbird\<účet>\RRRR_MM\` |
-| **čtvrtletně** | 4. 1. / 4. / 7. / 10. | **projít `retence_report.md`** (vznikl předchozí večer) a spustit `retention.py --delete` | — |
+| **čtvrtletně** | 1. 1. / 4. / 7. / 10. | **Todoist**: ruční export upomínek a úkolů | `D:\Work\Backup\Todoist\` |
+| **čtvrtletně** | 1. 1. / 4. / 7. / 10. | **spustit `zalohy_ctvrtletni.bat`** — večer, běží hodiny (viz sekce 1) | — |
+| **čtvrtletně** | den poté | **projít `retence_report.md`** z předchozího běhu a případně spustit `retention.py --delete` | — |
 | **ročně** | leden | **zkouška obnovy** — viz níže | — |
 
-Nic z toho nejde zautomatizovat: Home Assistant, routery i WD MyCloud jsou za
-webovým rozhraním a export je klikací. Připojení USB disku je fyzický úkon.
+Nic z toho nejde zautomatizovat: Home Assistant, routery, WD MyCloud i Todoist jsou
+za webovým rozhraním a export je klikací. Připojení USB disku je fyzický úkon.
 Export pošty z Thunderbirdu klikáš ty; **nastavení** profilu (účty, filtry, adresář)
 už zálohuje `backup_configs.py` sám každý měsíc — ruční zůstává jen samotná pošta.
 
-Když na něco zapomeneš, `status.py` to v pondělní kontrole vytkne. To je ta pojistka —
-připomínka v kalendáři se dá odklepnout, report po termínu se hromadí.
+Když na něco zapomeneš, vytkne to `status.py` — buď při dalším čtvrtletním běhu
+(kroky 1 a 6), nebo kdykoli si ho pustíš sám. Protože nic neběží na pozadí, je
+připomínka v kalendáři jediné, co drží termín.
 
 ## 4. Zkouška obnovy (jednou ročně)
 

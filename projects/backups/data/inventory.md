@@ -50,9 +50,13 @@ v `config.json`.
 | `totalcmd` | konfigurace Total Commander | `%APPDATA%\GHISLER` | kopie `*.ini`, nebo `backup_configs.py` | `Total Commander\YYMMDD\` | 90 d | **auto** (`backup_configs.py`) | 2025-03-21 |
 | `thunderbird` | e-maily (2 účty) | `%APPDATA%\Thunderbird\Profiles` | export do `<účet>\RRRR_MM\`; nastavení `backup_configs.py` | `Thunderbird\` | 90 d | poloauto — nastavení auto, pošta ručně | 2026-06-04 |
 | `wdmycloud` | nastavení síťového disku | web WD MyCloud | export `.conf` | `WD MyCloud\` | 90 d | **ručně** | 2025-03-21 (soubor z 2024-12-10) |
+| `todoist` | upomínky a úkoly | Todoist (web / aplikace) | ruční export | `Todoist\` | 90 d | **ručně** | zatím nezaznamenáno (doplnit při první záloze) |
 
-Ručně navždy zůstanou `home-assistant`, `router` a `wdmycloud` — jsou za webovým
-rozhraním. Hodnota je v tom, že je `status.py` připomene.
+Ručně navždy zůstanou `home-assistant`, `router`, `wdmycloud` a `todoist` — jsou za
+webovým rozhraním. Hodnota je v tom, že je `status.py` připomene.
+
+Složka `D:\Work\Backup\Todoist\` zatím neexistuje; vznikne první ruční zálohou.
+Do té doby ji `status.py` hlásí jako po termínu — je to správně, ne chyba.
 
 ### Neaktivní / doběhlé
 
@@ -91,8 +95,9 @@ rozhraním. Hodnota je v tom, že je `status.py` připomene.
 
 ## Co je slabé místo
 
-1. **`backup_data.bat` nikde není naplánovaný.** Poslední běh 2026-02-01, tedy 6 měsíců.
-   Řeší `install_tasks.ps1` (čtvrtletní úloha) — po nasazení odpadá.
+1. **`backup_data.bat` se pouští ručně.** Poslední běh 2026-02-01, tedy 6 měsíců.
+   Automatizace přes Plánovač úloh je vědomě zamítnutá (2026-08-12); jediná pojistka
+   je čtvrtletní `zalohy_ctvrtletni.bat` a připomínka v kalendáři.
 2. **Nikdo nekontroluje, že GoodSync doběhl.** Cíle `M:` a USB stojí na 2026-07-26.
    Protože Cloud i Ntb zůstávají záměrně ruční, je jediná pojistka pevný termín
    1. v měsíci a připomínka v kalendáři — GoodSync sám na sebe neupozorní.

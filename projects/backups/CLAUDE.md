@@ -8,6 +8,8 @@ Výchozí stav (2026-08-10): jedna položka poloautomatická, sedm ručních.
 
 Celý řetězec, rozhodnutí a slabá místa jsou v **`data/inventory.md`** — čti ho první.
 Co běží samo a co musí uživatel ručně, je v **`data/rutina.md`**.
+Podrobný popis skriptů — co dělají, jaké mají přepínače a jak se spouštějí — je
+v **`data/skripty.md`**.
 
 ## Data
 
@@ -34,7 +36,7 @@ je nikdy nemaže ani nepřepisuje. V repu je jen dokumentace a skripty.
 | `scripts/backup_configs.py` | zazálohuje konfigurace GoodSync, Total Commander a nastavení Thunderbirdu do `D:\Work\Backup\`. `--dry-run` nejdřív. |
 | `scripts/backup_data.bat` | WinRAR archivace `D:\Others` a `D:\Projects` do `D:\Work\Backup\Data\<Kategorie>\`. Nahrazuje starý `D:\Work\Skripty\backup_data.bat`. |
 | `scripts/retention.py` | vypíše RAR archivy nad rámec 4+1/rok. **Bez `--delete` nemaže**, s ním se ptá na potvrzení. |
-| `scripts/install_tasks.ps1` | vytvoří naplánované úlohy ve Windows. Bez `-Install` jen ukáže, co by udělal. |
+| `scripts/zalohy_ctvrtletni.bat` | ruční čtvrtletní běh — pustí po sobě status, konfigurace, RAR, dokumentaci jobů, retenci (jen výpis) a závěrečný status. Tudy jde všechno. |
 
 Spouštění z kořene repa:
 `.\.venv\Scripts\python.exe projects/backups/scripts/status.py`
@@ -52,6 +54,9 @@ Spouštění z kořene repa:
   ale mazání spouští vždy uživatel. Automatické mazání nikdy nenavrhuj ani neplánuj.
 - **Datum v názvu záloh je `YYMMDD`**, ne `YYYY-MM-DD` — drží to konvenci
   existujícího `backup_data.bat` a starých archivů. Uvnitř repa platí `YYYY-MM-DD`.
+- **Nic neběží přes Plánovač úloh Windows.** Rozhodnuto 2026-08-12: zálohuje se
+  ručně čtvrtletním `zalohy_ctvrtletni.bat`, ať je běh vidět a dá se zastavit.
+  Nenavrhuj naplánované úlohy ani je nezakládej.
 - **Nový skript je nejdřív `--dry-run`.** Cílem je disk s desítkami GB dat.
 - **`jobs.tic` se nikdy needituje skriptem.** Joby se spravují v GUI GoodSyncu;
   odsud se z něj jen čte. Rozbitý `jobs.tic` znamená rozbité všechny zálohy.
@@ -69,8 +74,7 @@ Spouštění z kořene repa:
 
 ## Otevřené otázky
 
-- Nasazení zatím **neproběhlo**: `install_tasks.ps1 -Install` ani přenastavení
-  GoodSync jobů podle `data/rutina.md`.
+- Přenastavení GoodSync jobů podle `data/rutina.md` zatím **neproběhlo**.
 - Starý `D:\Work\Skripty\backup_data.bat` se má nahradit tím ze `scripts/` — taky ne.
 - Zálohovat i notebooky (`FRELICHOVA-NTB`, `FRELICH-NTB`)?
 - Zbytek otevřených otázek k jednotlivým položkám je v `data/inventory.md`.
