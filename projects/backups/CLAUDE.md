@@ -36,10 +36,15 @@ je nikdy nemaže ani nepřepisuje. V repu je jen dokumentace a skripty.
 | `scripts/backup_configs.py` | zazálohuje konfigurace GoodSync, Total Commander a nastavení Thunderbirdu do `D:\Work\Backup\`. `--dry-run` nejdřív. |
 | `scripts/backup_data.bat` | WinRAR archivace `D:\Others` a `D:\Projects` do `D:\Work\Backup\Data\<Kategorie>\`. Nahrazuje starý `D:\Work\Skripty\backup_data.bat`. |
 | `scripts/retention.py` | vypíše RAR archivy nad rámec 4+1/rok. **Bez `--delete` nemaže**, s ním se ptá na potvrzení. |
+| `scripts/_run.bat` + `stav.bat`, `retence.bat`, `retence_smazat.bat`, … | `.bat` obálky nad python skripty — dvojklik místo příkazové řádky. Seznam v `data/skripty.md`. Nový python skript = i nová obálka. |
 | `scripts/zalohy_ctvrtletni.bat` | ruční čtvrtletní běh — pustí po sobě status, konfigurace, RAR, dokumentaci jobů, retenci (jen výpis) a závěrečný status. Tudy jde všechno. |
 
 Spouštění z kořene repa:
 `.\.venv\Scripts\python.exe projects/backups/scripts/status.py`
+
+Bez příkazové řádky: dvojklik na `.bat` obálku ve `scripts/`, nebo na stejnojmenný
+odkaz v `D:\Work\Skripty\Backups\` (mimo repo, neverzuje se — drží jen absolutní
+cestu k repu v `_cesta.bat`). Podrobnosti v `data/skripty.md`.
 
 ## Pravidla specifická pro tento projekt
 

@@ -10,6 +10,54 @@ cesty k venv jsou relativní k němu:
 .\.venv\Scripts\python.exe projects\backups\scripts\<skript>.py
 ```
 
+## Spouštění bez příkazové řádky — `.bat` obálky
+
+Ke každému skriptu je ve `scripts/` malá `.bat` obálka. **Dvojklik** na ni stačí —
+sama najde venv, spustí se z kořene repa, na konci vypíše `[OK]` nebo `[CHYBA]`
+a počká na klávesu, takže okno nezmizí.
+
+| Dvojklik na | Spustí | Píše na disk? |
+|---|---|---|
+| `stav.bat` | `status.py` | ne |
+| `stav_report.bat` | `status.py --md` | `data/status_*.md` |
+| `retence.bat` | `retention.py` | **ne — nic nemaže** |
+| `retence_smazat.bat` | `retention.py --delete` | **maže RAR archivy** (skript se ptá na potvrzení) |
+| `zaloha_konfiguraci_nanecisto.bat` | `backup_configs.py --dry-run` | ne |
+| `zaloha_konfiguraci.bat` | `backup_configs.py` | `D:\Work\Backup\` |
+| `goodsync_joby.bat` | `goodsync_jobs.py` | `data/goodsync_jobs_*.md` |
+| `pruzkum.bat` | `discover.py` | `data/discovery_*.md` |
+
+`_run.bat` je společný spouštěč, který ty obálky volají — **nespouštěj ho přímo**.
+Ověří existenci venv i skriptu, přepne se do kořene repa a předá dál návratový kód.
+Nový skript = nová obálka podle vzoru: jeden `call "%~dp0_run.bat" <skript.py> <parametry>`.
+
+Zvláštní případ zůstávají `backup_data.bat` (volá WinRAR, žádný Python) a
+`zalohy_ctvrtletni.bat` (pustí celý čtvrtletní běh po sobě).
+
+### Odkazy mimo repo — `D:\Work\Skripty\Backups\`
+
+Obálky ve `scripts/` jdou spustit z libovolného adresáře, ale **nesmí se odtud
+přesunout ani zkopírovat** — hledají kořen repa jako tři úrovně nad sebou.
+Aby se nemuselo chodit do repa, je v `D:\Work\Skripty\Backups\` osm
+**odkazů** stejného jména (`stav.bat`, `retence.bat`, `retence_smazat.bat`, …).
+Každý jen zavolá stejnojmennou obálku v repu a vrátí její návratový kód;
+žádná logika v nich není.
+
+Cesta k repu je na jednom jediném místě — `D:\Work\Skripty\Backups\_cesta.bat`:
+
+```bat
+set "REPO=D:\Projects\AI\ai_agents_generic"
+```
+
+**Když se repo přesune, uprav tenhle jeden řádek** a všech osm odkazů zase funguje.
+Dokud se neupraví, každý odkaz skončí hláškou `[CHYBA] Nenalezeno: …` s cestou
+k `_cesta.bat` — nespustí se tiše nic špatného.
+
+Ta složka **leží mimo repozitář a neverzuje se**. Je to schválně: obsahuje
+absolutní cestu k tomuhle konkrétnímu stroji. Odkazy se needitují — všechny změny
+chování patří do skriptů v repu. Přibude-li nový skript, přibude i nový odkaz
+(vzor: `call "%~dp0_cesta.bat"`, kontrola `if not exist`, `call "%CIL%"`).
+
 ## Přehled
 
 | Skript | Píše na disk? | Jak dlouho | Kdy se pouští |
