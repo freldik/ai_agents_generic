@@ -50,10 +50,16 @@ v `config.json`.
 | `totalcmd` | konfigurace Total Commander | `%APPDATA%\GHISLER` | kopie `*.ini`, nebo `backup_configs.py` | `Total Commander\YYMMDD\` | 90 d | **auto** (`backup_configs.py`) | 2025-03-21 |
 | `thunderbird` | e-maily (2 účty) | `%APPDATA%\Thunderbird\Profiles` | export do `<účet>\RRRR_MM\`; nastavení `backup_configs.py` | `Thunderbird\` | 90 d | poloauto — nastavení auto, pošta ručně | 2026-06-04 |
 | `wdmycloud` | nastavení síťového disku | web WD MyCloud | export `.conf` | `WD MyCloud\` | 90 d | **ručně** | 2025-03-21 (soubor z 2024-12-10) |
+| `hesla` | hesla | správce hesel | ruční export/záloha do OneDrive Osobního trezoru | mimo `D:\Work\Backup\` — `D:\OneDrive\Osobní trezor\` | 90 d | **ručně**, mimo `status.py` | zatím nezaznamenáno |
 | `todoist` | upomínky a úkoly | Todoist (web / aplikace) | ruční export | `Todoist\` | 90 d | **ručně** | zatím nezaznamenáno (doplnit při první záloze) |
 
 Ručně navždy zůstanou `home-assistant`, `router`, `wdmycloud` a `todoist` — jsou za
 webovým rozhraním. Hodnota je v tom, že je `status.py` připomene.
+
+`hesla` je jediná položka, kterou `status.py` nehlídá, a proto není v `config.json`:
+cíl je OneDrive Osobní trezor (`Osobní trezor.lnk`), zamčená složka, jejíž obsah
+Windows nezpřístupní, dokud ji ručně neodemkneš. Kontrola data poslední zálohy by
+tedy stejně nefungovala. Drží ji jen čtvrtletní připomínka v `rutina.md`.
 
 Složka `D:\Work\Backup\Todoist\` zatím neexistuje; vznikne první ruční zálohou.
 Do té doby ji `status.py` hlásí jako po termínu — je to správně, ne chyba.

@@ -81,12 +81,15 @@ v GoodSyncu.
 | **čtvrtletně** | 1. 1. / 4. / 7. / 10. | **WD MyCloud**: export nastavení `.conf` | `D:\Work\Backup\WD MyCloud\` |
 | **čtvrtletně** | 1. 1. / 4. / 7. / 10. | **Thunderbird**: export pošty obou účtů | `D:\Work\Backup\Thunderbird\<účet>\RRRR_MM\` |
 | **čtvrtletně** | 1. 1. / 4. / 7. / 10. | **Todoist**: ruční export upomínek a úkolů | `D:\Work\Backup\Todoist\` |
+| **čtvrtletně** | 1. 1. / 4. / 7. / 10. | **hesla**: ruční záloha do OneDrive Osobního trezoru (Vault) | `D:\OneDrive\Osobní trezor\` |
 | **čtvrtletně** | 1. 1. / 4. / 7. / 10. | **spustit `zalohy_ctvrtletni.bat`** — večer, běží hodiny (viz sekce 1) | — |
 | **čtvrtletně** | den poté | **projít `retence_report.md`** z předchozího běhu a případně spustit `retention.py --delete` | — |
 | **ročně** | leden | **zkouška obnovy** — viz níže | — |
 
 Nic z toho nejde zautomatizovat: Home Assistant, routery, WD MyCloud i Todoist jsou
-za webovým rozhraním a export je klikací. Připojení USB disku je fyzický úkon.
+za webovým rozhraním a export je klikací. Hesla jsou navíc záměrně mimo dosah skriptů —
+Osobní trezor je zamčený a jeho obsah není vidět, dokud ho ručně neodemkneš, takže
+`status.py` tenhle bod nehlídá a drží ho jen připomínka v kalendáři. Připojení USB disku je fyzický úkon.
 Export pošty z Thunderbirdu klikáš ty; **nastavení** profilu (účty, filtry, adresář)
 už zálohuje `backup_configs.py` sám každý měsíc — ruční zůstává jen samotná pošta.
 
