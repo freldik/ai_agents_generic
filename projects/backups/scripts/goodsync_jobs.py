@@ -23,7 +23,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
-from shared.lib.repo import data_dir, dated  # noqa: E402
+from shared.lib.repo import dated, temp_dir  # noqa: E402
 
 PROJECT_DIR = Path(__file__).resolve().parents[1]
 PROJECT = PROJECT_DIR.name
@@ -115,7 +115,7 @@ def main() -> None:
         lines += ["", "## Nezařazené cíle", ""]
         lines += [f"- {j['name']} -> `{j['right']}`" for j in unknown]
 
-    target = data_dir(PROJECT) / dated("goodsync_jobs", ".md")
+    target = temp_dir(PROJECT) / dated("goodsync_jobs", ".md")
     target.write_text("\n".join(lines) + "\n", encoding="utf-8")
     print(f"Zapsáno: {target}  ({len(jobs)} jobů, {len(unknown)} nezařazených)")
 

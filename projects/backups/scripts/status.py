@@ -4,7 +4,7 @@ Pro každou položku z `config.json` najde nejnovější soubor v cílové slož
 a porovná jeho datum s dohodnutým intervalem. Jen čte.
 
 Spuštění:  .\\.venv\\Scripts\\python.exe projects/backups/scripts/status.py
-           ... --md   zapíše report do data/status_RRRR-MM-DD.md
+           ... --md   zapíše report do temp/status_RRRR-MM-DD.md
 """
 
 from __future__ import annotations
@@ -16,7 +16,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
-from shared.lib.repo import data_dir, dated  # noqa: E402
+from shared.lib.repo import dated, temp_dir  # noqa: E402
 
 PROJECT_DIR = Path(__file__).resolve().parents[1]
 PROJECT = PROJECT_DIR.name
@@ -108,7 +108,7 @@ def write_md(rows: list[dict]) -> Path:
             f"| {r['stav']} | `{r['id']}` | {r['nazev']} | {r['posledni']} "
             f"| {vek} | {r['interval']} d |"
         )
-    target = data_dir(PROJECT) / dated("status", ".md")
+    target = temp_dir(PROJECT) / dated("status", ".md")
     target.write_text("\n".join(lines) + "\n", encoding="utf-8")
     return target
 

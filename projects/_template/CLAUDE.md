@@ -13,7 +13,8 @@
 |---|---|---|
 | `data/…` | | |
 
-Vstupní data se **nepřepisují**. Výstupy jdou vedle nich s datem v názvu.
+Vstupní data se **nepřepisují**. Výstupy skriptů jdou do `temp/` s datem v názvu
+(`temp_dir()` ze `shared.lib.repo`) — `temp/` se neverzuje, `data/` ano.
 
 ## Skripty
 

@@ -18,10 +18,10 @@ v **`data/skripty.md`**.
 | `data/inventory.md` | inventura záloh: co, odkud, kam, jak často, slabá místa | ručně, podle průzkumu a rozhovoru |
 | `data/rutina.md` | naplánované úlohy, návrh periodicity GoodSyncu, ruční připomínky | ručně |
 | `config.json` | strojová verze inventury — cesty, globy, intervaly | ručně; `id` musí souhlasit s `inventory.md` |
-| `data/discovery_*.md` | průzkum stroje — disky, síťové jednotky, úlohy | generuje `discover.py` |
-| `data/goodsync_jobs_*.md` | seznam všech GoodSync jobů: odkud, kam | generuje `goodsync_jobs.py` z `jobs.tic` |
+| `temp/discovery_*.md` | průzkum stroje — disky, síťové jednotky, úlohy | generuje `discover.py` |
+| `temp/goodsync_jobs_*.md` | seznam všech GoodSync jobů: odkud, kam | generuje `goodsync_jobs.py` z `jobs.tic` |
 | `data/goodsync_runs_*.md` | poslední časy běhů jobů | **ručně** opsáno z GUI — jinak se nezjistí |
-| `data/status_*.md` | snapshot stavu záloh k datu | generuje `status.py --md` |
+| `temp/status_*.md` | snapshot stavu záloh k datu | generuje `status.py --md` |
 
 Zálohy samotné žijí v `D:\Work\Backup\` — **mimo tento repozitář** a tenhle projekt
 je nikdy nemaže ani nepřepisuje. V repu je jen dokumentace a skripty.

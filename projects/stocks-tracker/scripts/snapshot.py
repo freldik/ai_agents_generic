@@ -11,7 +11,7 @@ import pandas as pd  # noqa: E402
 import yfinance as yf  # noqa: E402
 
 from shared.lib import excel_io  # noqa: E402
-from shared.lib.repo import data_dir, dated  # noqa: E402
+from shared.lib.repo import data_dir, dated, temp_dir  # noqa: E402
 
 PROJECT = "stocks-tracker"
 
@@ -45,7 +45,7 @@ def main() -> None:
     portfolio["pnl"] = portfolio["value"] - portfolio["cost"]
     portfolio["pnl_pct"] = (portfolio["pnl"] / portfolio["cost"] * 100).round(2)
 
-    out_dir = data / "snapshots"
+    out_dir = temp_dir(PROJECT) / "snapshots"
     out_dir.mkdir(exist_ok=True)
     out = excel_io.write_new(portfolio, out_dir / dated("snapshot", ".xlsx"), "Portfolio")
 

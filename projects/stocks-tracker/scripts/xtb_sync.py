@@ -41,7 +41,7 @@ import openpyxl
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
-from shared.lib.repo import data_dir, dated  # noqa: E402
+from shared.lib.repo import dated, temp_dir  # noqa: E402
 
 PROJECT = "stocks-tracker"
 
@@ -617,7 +617,7 @@ def main() -> None:
 
     if not args.no_report:
         suffix = "" if args.write else "_dry-run"
-        out = data_dir(PROJECT) / dated(f"xtb_sync{suffix}", ".md")
+        out = temp_dir(PROJECT) / dated(f"xtb_sync{suffix}", ".md")
         out.write_text(markdown_report(blocks, sporeni, args.root, args.write), encoding="utf-8")
         print(f"Report: {out}")
 

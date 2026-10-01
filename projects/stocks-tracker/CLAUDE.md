@@ -116,7 +116,7 @@ Podstatný je list **`Open Positions`**:
 ```
 
 Projde všechny vlastníky a brokery, vypíše změny a uloží report do
-`data/xtb_sync_dry-run_<datum>.md`. Do sešitu nezapíše nic.
+`temp/xtb_sync_dry-run_<datum>.md`. Do sešitu nezapíše nic.
 
 **Zkontroluj v reportu:** sekci „pozice z exportu, které nemají řádek v sešitu“ — když
 tam něco je, nově koupená akcie ještě nemá řádek a její peníze by se nikam nezapočítaly.
@@ -127,7 +127,7 @@ tam něco je, nově koupená akcie ještě nemá řádek a její peníze by se n
 .\.venv\Scripts\python.exe projects/stocks-tracker/scripts/xtb_sync.py --write
 ```
 
-Uloží report do `data/xtb_sync_<datum>.md` a zálohu sešitu jako `sporeni.bak.xlsx`.
+Uloží report do `temp/xtb_sync_<datum>.md` a zálohu sešitu jako `sporeni.bak.xlsx`.
 Report má sekci pro každou dvojici vlastník + broker: kontrolu součtů (hlavička exportu
 vs. co se zapsalo), tabulku řádků (staré → nové) a seznam pozic bez řádku s nápovědou,
 který řádek je nejspíš myšlen (jiný ticker / jiná Mena).
@@ -173,7 +173,8 @@ bez ohledu na velikost písmen a diakritiku).
 |---|---|---|
 | `D:\Work\Finance\Test\sporeni.xlsx` | přehled portfolia — **mimo repozitář** | ruční sešit uživatele |
 | `…\Test\<Vlastnik>\<Broker>\<MENA>_*.xlsx` | exporty pozic — **mimo repozitář** | xStation 5 |
-| `data/xtb_sync_*.md` | co se při aktualizaci přepsalo, po vlastnících a brokerech, všechny měny | generuje `xtb_sync.py` |
+| `temp/xtb_sync_*.md` | co se při aktualizaci přepsalo — **neverzuje se** | generuje `xtb_sync.py` |
+| `data/xtb_sync_2026-08-13.md` | report z prvního zápisu, ponechaný v historii | `xtb_sync.py` (starší verze) |
 | `data/portfolio.csv` | **nepoužívá se** — ukázková data ze šablony (MSFT, CEZ.PR) | — |
 
 ## Skripty
@@ -192,7 +193,7 @@ venv, spustí skript z kořene repa, na konci vypíše `[OK]` / `[CHYBA]` a poč
 
 | Dvojklik na | Spustí | Píše do sešitu? |
 |---|---|---|
-| `sync_nanecisto.bat` | `xtb_sync.py --dry-run` | ne (jen report do `data/`) |
+| `sync_nanecisto.bat` | `xtb_sync.py --dry-run` | ne (jen report do `temp/`) |
 | `sync_zapsat.bat` | `xtb_sync.py --write` | **ano** — před během se ptá (pause) |
 | `kurzy_nanecisto.bat` | `update_rates.py` | ne |
 | `kurzy_zapsat.bat` | `update_rates.py --write` | **ano** — před během se ptá (pause) |

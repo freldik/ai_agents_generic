@@ -54,7 +54,7 @@ echo     2. zaloha konfiguraci     GoodSync, Total Commander, Thunderbird
 echo     3. RAR archivace dat      D:\Others a D:\Projects - TRVA HODINY
 echo     4. dokumentace GoodSync   jen cte
 echo     5. retence - vypis        NIC NEMAZE
-echo     6. stav po zaloze         zapise report do data\
+echo     6. stav po zaloze         zapise report do temp\
 echo.
 echo   Log behu: %LOG%
 echo.
@@ -156,7 +156,7 @@ echo     .venv\Scripts\python.exe projects\backups\scripts\retention.py --delete
 rem =========================================================================
 echo.
 echo ------------------------------------------------------------
-echo  [6/6] STAV PO ZALOZE - zapise report do projects\backups\data\
+echo  [6/6] STAV PO ZALOZE - zapise report do projects\backups\temp\
 echo ------------------------------------------------------------
 echo. >> "%LOG%"
 echo --- [6/6] status.py --md >> "%LOG%"

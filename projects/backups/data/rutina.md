@@ -19,7 +19,7 @@ projects\backups\scripts\zalohy_ctvrtletni.bat
 | 3 | `backup_data.bat` — Others + Projects do `Data\<Kategorie>\` | **hodiny** |
 | 4 | `goodsync_jobs.py` — přepíše dokumentaci jobů z `jobs.tic` | vteřiny |
 | 5 | `retention.py --out` — report archivů nad rámec 4+1/rok, **nic nemaže** | vteřiny |
-| 6 | `status.py --md` — stav po záloze do `data/status_*.md` | vteřiny |
+| 6 | `status.py --md` — stav po záloze do `temp/status_*.md` | vteřiny |
 
 Pouštěj to **večer** kvůli kroku 3. Průběh se loguje do
 `D:\Work\Backup\Data\_log\zalohy_RRRR-MM-DD.log`.

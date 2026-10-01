@@ -8,6 +8,9 @@ secrets/
 *_private.*
 .env
 
+# Výstupy skriptů (reporty, snapshoty) — neverzují se. data/ se verzuje.
+projects/*/temp/
+
 # Excel/Office dočasné soubory
 ~$*
 *.tmp

@@ -1,13 +1,13 @@
 @echo off
 rem ============================================================================
-rem  STAV ZALOH + ulozeni reportu do data\
+rem  STAV ZALOH + ulozeni reportu do temp\
 rem  Spusteni: dvojklik na tenhle soubor.
 rem  Odpovida: .venv\Scripts\python.exe projects\backups\scripts\status.py --md
 rem   Zapise data\status_YYYY-MM-DD.md, jinak nic nemeni.
 rem ============================================================================
 echo.
 echo ============================================================
-echo   STAV ZALOH + ulozeni reportu do data\
+echo   STAV ZALOH + ulozeni reportu do temp\
 echo ============================================================
 echo.
 call "%~dp0_run.bat" status.py --md

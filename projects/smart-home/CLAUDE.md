@@ -35,7 +35,8 @@ Firmware vlastních modulů má navíc git repozitáře na GitLabu
 | `data/migrace.md` | co z OpenHABu ještě chybí v Home Assistantu a v jakém stavu | ručně / z konfigurace OpenHABu |
 | `data/otazky.md` | otevřené otázky na uživatele, seřazené podle důležitosti | ručně; odpovědi se rozvedou do ostatních dokumentů a odsud smažou |
 
-Vstupní data se **nepřepisují**. Výstupy jdou vedle nich s datem v názvu.
+Vstupní data se **nepřepisují**. Výstupy skriptů jdou do `temp/` s datem v názvu
+(neverzuje se).
 
 ## Skripty
 

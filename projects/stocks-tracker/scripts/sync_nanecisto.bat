@@ -3,7 +3,7 @@ rem ============================================================================
 rem  AKCIE Z XTB - NANECISTO
 rem  Spusteni: dvojklik na tenhle soubor.
 rem  Odpovida: .venv\Scripts\python.exe projects\stocks-tracker\scripts\xtb_sync.py --dry-run
-rem   Jen vypis a report do data\, do sesitu nic nezapisuje.
+rem   Jen vypis a report do temp\, do sesitu nic nezapisuje.
 rem ============================================================================
 echo.
 echo ============================================================

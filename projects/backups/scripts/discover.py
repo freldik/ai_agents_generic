@@ -1,6 +1,6 @@
 """Průzkum stroje — co tu je za disky, naplánované úlohy a zálohovací nástroje.
 
-Jen čte. Nic nemaže, nic nekopíruje. Výstup je markdown report v data/
+Jen čte. Nic nemaže, nic nekopíruje. Výstup je markdown report v temp/
 s datem v názvu, který slouží jako podklad pro data/inventory.md.
 
 Spuštění:  .\\.venv\\Scripts\\python.exe projects/backups/scripts/discover.py
@@ -15,7 +15,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
-from shared.lib.repo import data_dir, dated  # noqa: E402
+from shared.lib.repo import dated, temp_dir  # noqa: E402
 
 PROJECT = Path(__file__).resolve().parents[1].name
 
@@ -131,7 +131,7 @@ def main() -> None:
     report += section("Kde leží konfigurace zálohovaných nástrojů", config_locations())
     report += section("Nalezené existující zálohovací skripty", existing_zip_scripts())
 
-    target = data_dir(PROJECT) / dated("discovery", ".md")
+    target = temp_dir(PROJECT) / dated("discovery", ".md")
     target.write_text(report, encoding="utf-8")
     print(f"Zapsáno: {target}")
 

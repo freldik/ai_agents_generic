@@ -9,6 +9,8 @@ jsou markdown a mají být čitelné i bez agenta.
 | Cesta | Účel |
 |---|---|
 | `projects/<name>/` | samostatný projekt, nezávislý na ostatních |
+| `projects/<name>/data/` | vstupy a ručně psané podklady — **verzuje se** |
+| `projects/<name>/temp/` | výstupy skriptů (reporty, snapshoty) — **neverzuje se** (`.gitignore`) |
 | `projects/_template/` | kostra pro nový projekt — zkopíruj ji |
 | `shared/lib/` | sdílené python utility |
 | `shared/templates/` | sdílené šablony dokumentů (.xlsx, .docx, .md) |
@@ -44,7 +46,9 @@ from shared.lib import excel_io
 
 - **Jazyk:** poznámky a dokumenty česky, kód a commit messages anglicky.
 - **Datumy:** vždy `YYYY-MM-DD`, nikdy relativně („minulý týden") v uložených souborech.
-- **Data se verzují.** Historie portfolia i nákupů je hodnotná.
+- **`data/` se verzuje.** Historie portfolia i nákupů je hodnotná.
   Citlivé soubory pojmenuj `*_private.*` nebo ulož do `secrets/` — to je gitignorováno.
-- **Nikdy nepřepisuj vstupní data.** Výstupy piš vedle nich s datem v názvu.
+- **Výstupy skriptů jdou do `temp/`** projektu (`temp_dir()` ze `shared/lib/repo.py`),
+  s datem v názvu. `temp/` se neverzuje — co má zůstat v historii, přepiš ručně do `data/`.
+- **Nikdy nepřepisuj vstupní data.**
 - Před přepsáním existujícího `.xlsx` se zeptej — často obsahuje ruční úpravy.

@@ -27,7 +27,15 @@ def project_dir(name: str) -> Path:
 
 
 def data_dir(name: str) -> Path:
+    """Vstupy a ručně psané podklady projektu — verzuje se."""
     d = project_dir(name) / "data"
+    d.mkdir(parents=True, exist_ok=True)
+    return d
+
+
+def temp_dir(name: str) -> Path:
+    """Výstupy skriptů (reporty, snapshoty) — neverzuje se, je v .gitignore."""
+    d = project_dir(name) / "temp"
     d.mkdir(parents=True, exist_ok=True)
     return d
 

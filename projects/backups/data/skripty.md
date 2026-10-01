@@ -19,13 +19,13 @@ a počká na klávesu, takže okno nezmizí.
 | Dvojklik na | Spustí | Píše na disk? |
 |---|---|---|
 | `stav.bat` | `status.py` | ne |
-| `stav_report.bat` | `status.py --md` | `data/status_*.md` |
+| `stav_report.bat` | `status.py --md` | `temp/status_*.md` |
 | `retence.bat` | `retention.py` | **ne — nic nemaže** |
 | `retence_smazat.bat` | `retention.py --delete` | **maže RAR archivy** (skript se ptá na potvrzení) |
 | `zaloha_konfiguraci_nanecisto.bat` | `backup_configs.py --dry-run` | ne |
 | `zaloha_konfiguraci.bat` | `backup_configs.py` | `D:\Work\Backup\` |
-| `goodsync_joby.bat` | `goodsync_jobs.py` | `data/goodsync_jobs_*.md` |
-| `pruzkum.bat` | `discover.py` | `data/discovery_*.md` |
+| `goodsync_joby.bat` | `goodsync_jobs.py` | `temp/goodsync_jobs_*.md` |
+| `pruzkum.bat` | `discover.py` | `temp/discovery_*.md` |
 
 `_run.bat` je společný spouštěč, který ty obálky volají — **nespouštěj ho přímo**.
 Ověří existenci venv i skriptu, přepne se do kořene repa a předá dál návratový kód.
@@ -62,9 +62,9 @@ chování patří do skriptů v repu. Přibude-li nový skript, přibude i nový
 
 | Skript | Píše na disk? | Jak dlouho | Kdy se pouští |
 |---|---|---|---|
-| `status.py` | jen `data/status_*.md` s `--md` | vteřiny | kdykoli |
-| `discover.py` | `data/discovery_*.md` | ~1 min | jednorázově, při změně stroje |
-| `goodsync_jobs.py` | `data/goodsync_jobs_*.md` | vteřiny | po změně jobů v GoodSyncu |
+| `status.py` | jen `temp/status_*.md` s `--md` | vteřiny | kdykoli |
+| `discover.py` | `temp/discovery_*.md` | ~1 min | jednorázově, při změně stroje |
+| `goodsync_jobs.py` | `temp/goodsync_jobs_*.md` | vteřiny | po změně jobů v GoodSyncu |
 | `backup_configs.py` | **ano — `D:\Work\Backup\`** | vteřiny | měsíčně / čtvrtletně |
 | `backup_data.bat` | **ano — desítky GB** | **hodiny** | čtvrtletně, večer |
 | `retention.py` | nic (bez `--delete`) | vteřiny | čtvrtletně, ručně |
@@ -90,7 +90,7 @@ Stavy: `ok` → `stárne` (nad 80 % intervalu) → `PO TERMÍNU` (nad intervalem
 
 ```powershell
 .\.venv\Scripts\python.exe projects\backups\scripts\status.py
-.\.venv\Scripts\python.exe projects\backups\scripts\status.py --md   # + report do data\
+.\.venv\Scripts\python.exe projects\backups\scripts\status.py --md   # + report do temp\
 ```
 
 Jen čte. Nová položka se objeví ve výpisu hned, jak ji přidáš do `config.json` —
@@ -100,14 +100,14 @@ bez toho ji skript nikdy nepřipomene.
 
 Vypíše disky, připojené síťové jednotky, nesystémové naplánované úlohy a známá
 umístění konfigurací (GoodSync, Total Commander, Thunderbird) do
-`data/discovery_RRRR-MM-DD.md`. Jen čte, podklad pro ruční aktualizaci `inventory.md`.
+`temp/discovery_RRRR-MM-DD.md`. Jen čte, podklad pro ruční aktualizaci `inventory.md`.
 
 Pouštět po změně hardwaru nebo když nesedí, co se kam připojuje.
 
 ## `goodsync_jobs.py` — dokumentace GoodSync jobů
 
 Rozparsuje `%APPDATA%\GoodSync\jobs.tic` (formát s délkově prefixovanými poli) a zapíše
-tabulku všech jobů — odkud, kam, na který cíl — do `data/goodsync_jobs_RRRR-MM-DD.md`.
+tabulku všech jobů — odkud, kam, na který cíl — do `temp/goodsync_jobs_RRRR-MM-DD.md`.
 
 **`jobs.tic` se z tohohle projektu nikdy needituje**, jen čte; joby se spravují v GUI.
 Poslední časy běhů v souboru nejsou, ty jsou pouze v GUI a přepisují se ručně do
@@ -183,7 +183,7 @@ Ctrl+C. Spustí se dvojklikem nebo z příkazové řádky.
 3. `backup_data.bat` — RAR archivace (**hodiny**)
 4. `goodsync_jobs.py` — dokumentace jobů
 5. `retention.py --out …\retence_report.md` — **jen výpis, nic nemaže**
-6. `status.py --md` — stav po záloze, report do `data/`
+6. `status.py --md` — stav po záloze, report do `temp/`
 
 Loguje do `D:\Work\Backup\Data\_log\zalohy_RRRR-MM-DD.log`, počítá chybné kroky
 a na konci připomene ruční kroky přes webová rozhraní. Před prvním krokem ověří,

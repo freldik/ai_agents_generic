@@ -10,13 +10,15 @@ description: Čtení a zápis .xlsx souborů v tomto repu — nákupní seznamy,
 Neimplementuj čtení/zápis znovu. Ze skriptu v projektu:
 
 ```python
-from shared.lib.repo import ensure_on_path, data_dir, dated
+from shared.lib.repo import ensure_on_path, data_dir, dated, temp_dir
 ensure_on_path()
 from shared.lib import excel_io
 
 df = excel_io.read_sheet(data_dir("groceries") / "nakupy.xlsx", sheet="2026")
-excel_io.write_new(vysledek, data_dir("groceries") / dated("souhrn", ".xlsx"))
+excel_io.write_new(vysledek, temp_dir("groceries") / dated("souhrn", ".xlsx"))
 ```
+
+Vstupy čti z `data/` (verzuje se), výstupy skriptů piš do `temp/` (neverzuje se).
 
 - `read_sheet(path, sheet)` — jeden list, prázdné řádky/sloupce odstraněny
 - `read_all(path)` — dict všech listů
@@ -26,7 +28,7 @@ excel_io.write_new(vysledek, data_dir("groceries") / dated("souhrn", ".xlsx"))
 ## Pravidla
 
 1. **Nikdy nepřepisuj vstupní soubor.** Uživatel v něm má ruční úpravy a formátování,
-   které pandas při přepsání zahodí. Piš vedle (`dated()`) nebo přidej list.
+   které pandas při přepsání zahodí. Piš do `temp/` (`dated()`) nebo přidej list.
 2. **Před zápisem do existujícího souboru se zeptej.**
 3. **Datumy** parsuj do `datetime`, ukládej jako datum (ne string). V názvech souborů `YYYY-MM-DD`.
 4. **Čísla s čárkou** — české Excely mívají desetinnou čárku a `1 234,50`.
