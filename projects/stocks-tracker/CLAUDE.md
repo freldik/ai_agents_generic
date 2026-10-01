@@ -5,7 +5,7 @@
 Sledování akciového portfolia u brokera XTB — kolik je do které akcie investováno,
 jakou má dnes hodnotu a kolik ještě zbývá dokoupit do plánu.
 
-Přehled se drží v ručním excelu **`D:\Work\Sporeni\sporeni.xlsx`** (mimo tento repozitář).
+Přehled se drží v ručním excelu **`D:\Work\Finance\Test\sporeni.xlsx`** (mimo tento repozitář).
 Úkolem projektu je přenášet do něj čísla z exportu portfolia z XTB, aby se
 nepřepisovala ručně.
 
@@ -18,7 +18,7 @@ což u brokera není.
 ### Strom exportů
 
 ```
-D:\Work\Sporeni\Test\            ← kořen (konstanta ROOT ve skriptu)
+D:\Work\Finance\Test\            ← kořen (konstanta ROOT ve skriptu)
 ├─ sporeni.xlsx
 ├─ Marek\
 │  └─ XTB\
@@ -36,27 +36,35 @@ Ve složce brokera smí být pro každou měnu **právě jeden** soubor. Skript 
 a při dvou souborech téže měny skončí chybou — konkrétní název se proto nikde nezadává.
 Starý export ze složky smaž, nebo ho odsuň jinam.
 
-Měna, pro kterou ve složce export není, se zapíše jako **0** — čte se to jako „v téhle
-měně u tohohle brokera nic nedržím“. Vlastník, který nemá složku s exportem, se
-**vůbec nedotkne** — jeho list zůstane, jak je.
+**Řádek, ke kterému v exportu není pozice, skript nepřepisuje** — jen ho vypíše
+(v konzoli i v reportu, s aktuálními hodnotami). Platí to pro plánované nákupy,
+pro řádky měny, pro kterou ve složce export není, i pro prodané pozice — ty je
+potřeba vynulovat nebo smazat ručně. Vlastník, který nemá složku s exportem, se
+**vůbec nedotkne**.
 
 ### List v sešitu
 
-Všichni vlastníci jsou na **jednom společném listu `Akcie`** a rozlišují se sloupci
-`Vlastnik` a `Broker`. Skript zpracuje jen řádky, které odpovídají složce, ze které
-export přišel — `Marek\XTB\` sáhne jen na řádky s `Vlastnik=Marek` a `Broker=XTB`.
+Všichni vlastníci jsou na **jednom společném listu `Akcie`** (tabulka `Tabulka2`
+od `A1`). Jeden řádek = jedna pozice, určená sloupci `Vlastnik`, `Broker` a `Mena`.
+Skript zpracuje jen řádky, které odpovídají složce a souboru, ze kterých export přišel:
+`Marek\XTB\USD_*.xlsx` plní jen řádky s `Vlastnik=Marek`, `Broker=XTB`, `Mena=USD`.
 
-Jak se list hledá:
+**`Mena` = měna čísel v řádku**, ne měna burzy. Sešit podle ní bere kurz
+(`VLOOKUP(Mena, Kurzy)`), takže USD částka v řádku s `Mena=EUR` by dala špatné CZK.
+Účet XTB je v USD a přepočítává do USD i evropské tituly (Rheinmetall, voestalpine,
+ArcelorMittal…) — ty proto patří do řádku s `Mena=USD`.
 
-1. Je-li v sešitu list se sloupci `Vlastnik` **i** `Broker`, je to společný list a patří
-   do něj všichni. (Dnešní stav — list `Akcie`.)
-2. Jinak se hledá list pojmenovaný `Akcie - <Broker> (<Vlastnik>)`. Tuhle podobu měl
-   sešit dřív; kdyby se k ní vrátil, skript ji pozná. Markův list se tehdy jmenoval
-   `Akcie - XTB (Moje)` — výjimku řeší `OWNER_ALIASES` ve skriptu.
+Párování řádku s pozicí v exportu:
+
+1. **podle tickeru** — první část sloupce `Nazev akcie` před čárkou (`GOOGL.US, Alphabet…`),
+2. u řádků **bez tickeru** podle názvu ve sloupci `Akcie` (normalizovaně, + `ALIASES`).
+
+Řádek s tickerem se podle názvu nepáruje — plánované nákupy (např. `S&P 500` s `500U.UK`)
+by jinak sebraly cizí pozici. Jedna pozice smí patřit jen jednomu řádku.
 
 Sloupce se **hledají podle názvů v hlavičce**, ne podle písmen, a rozsah řádků se bere
-z definice tabulky, aby skript nesáhl na součty pod ní. Nepřejmenovávej proto hlavičky
-`Investovano USD`, `Hodnota EUR` atd.
+z definice tabulky, aby skript nesáhl na tabulku měn a součty pod ní. Nepřejmenovávej
+proto hlavičky `Akcie`, `Nazev akcie`, `Vlastnik`, `Broker`, `Mena`, `Investovano`, `Hodnota`.
 
 **Vlastník musí mít na listu své řádky.** Když má export, ale ani jeden řádek s jeho
 jménem ve sloupci `Vlastnik`, skript nezapíše nic a nahlásí to — v konzoli i v reportu:
@@ -73,19 +81,19 @@ Sloupce, o které jde:
 
 | Sloupec | Kdo ho plní |
 |---|---|
-| Akcie, Kategorie, Broker, Vlastnik | ručně uživatel |
-| **Investovano USD / EUR / CZK** | **`xtb_sync.py`** |
-| Plan — kolik chce uživatel do titulu vložit | ručně uživatel |
-| Dokoupit | vzorec `MAX(0, Plan − Investovano)` |
-| **Hodnota USD / EUR / CZK** | **`xtb_sync.py`** |
-| Zisk a Zisk % ve všech měnách | vzorce |
+| Akcie, Nazev akcie (ticker, název), Kategorie, Typ, Broker, Vlastnik, Mena | ručně uživatel |
+| Upozorneni prodej / nakup, Plan | ručně uživatel |
+| **Investovano, Hodnota** | **`xtb_sync.py`** |
+| Dokoupit, Zisk, Zisk %, Kurz, … CZK | vzorce |
 
-Pod tabulkou akcií je ještě tabulka měn (ř. 51–53), součty (55–59), kurzy `C61`/`C62`
-a souhrn podle vlastníka (66+, `SUMIF` přes sloupec `Vlastnik`). **Nic z toho skript
-nemění** — souhrn se dopočítá sám, jakmile přibudou řádky dalších vlastníků.
+Pod tabulkou akcií je tabulka měn `Tabulka3` (hotovost podle měny/brokera/vlastníka),
+kurzy (`Kurzy` = `A60:B63`) a souhrny podle vlastníka, brokera a kategorie.
+`xtb_sync.py` z toho nemění nic; kurzy (jen sloupec B oblasti `Kurzy`) přepisuje
+`update_rates.py`.
 
-Řádky bez otevřené pozice (CEZ, Colt CZ Group, II EUR overnight Rate Swap) jsou
-plánované nákupy a zůstávají na nule.
+Řádky bez otevřené pozice (CEZ, Colt CZ Group, EUR overnight Rate Swap, EUR varianty
+Rheinmetallu a HeidelbergCementu, S&P 500 `500U.UK`) jsou plánované nákupy — skript
+je jen vypíše a nechá, jak jsou.
 
 ## Postup aktualizace
 
@@ -120,16 +128,32 @@ tam něco je, nově koupená akcie ještě nemá řádek a její peníze by se n
 ```
 
 Uloží report do `data/xtb_sync_<datum>.md` a zálohu sešitu jako `sporeni.bak.xlsx`.
-Report má sekci pro každou dvojici vlastník + broker a v každé tabulku se všemi třemi
-měnami vedle sebe (staré → nové), včetně součtového řádku.
+Report má sekci pro každou dvojici vlastník + broker: kontrolu součtů (hlavička exportu
+vs. co se zapsalo), tabulku řádků (staré → nové) a seznam pozic bez řádku s nápovědou,
+který řádek je nejspíš myšlen (jiný ticker / jiná Mena).
+
+Sešit nesmí být při zápisu otevřený v Excelu — skript to pozná podle `~$sporeni.xlsx`
+a skončí.
 
 Přepínače: `--root` (jiný kořen exportů), `--sporeni` (jiný sešit, výchozí je
 `<kořen>\sporeni.xlsx`), `--no-report`.
 
-### 4. Otevřít sešit v Excelu
+### 4. Aktualizovat kurzy
+
+```powershell
+.\.venv\Scripts\python.exe projects/stocks-tracker/scripts/update_rates.py          # jen výpis
+.\.venv\Scripts\python.exe projects/stocks-tracker/scripts/update_rates.py --write
+```
+
+Stáhne denní kurz ČNB (`cnb.cz/.../denni_kurz.txt`) a přepíše sloupec B v pojmenované
+oblasti `Kurzy` podle kódu měny ve sloupci A. CZK zůstává 1; měna, kterou ČNB
+nevyhlašuje, se jen nahlásí. Kurz je přepočtený na 1 jednotku (ČNB uvádí např. JPY
+za 100). O víkendu/svátku ČNB vrací poslední platný kurz — skript vypíše datum jeho
+vyhlášení. `--date YYYY-MM-DD` vezme kurz k jinému dni.
+
+### 5. Otevřít sešit v Excelu
 
 Vzorce (Zisk, součty, přepočty do CZK) se přepočítají při otevření.
-Kurzy v `C61`/`C62` si uživatel aktualizuje sám — skript na ně nesahá.
 
 ## Přidání vlastníka, brokera nebo měny
 
@@ -137,7 +161,7 @@ Kurzy v `C61`/`C62` si uživatel aktualizuje sám — skript na ně nesahá.
 |---|---|
 | **vlastníka** | složku `<kořen>\<Jmeno>\<Broker>\` s exportem **a** řádky na listu `Akcie` s jeho jménem ve sloupci `Vlastnik` |
 | **brokera** | složku `<kořen>\<Vlastnik>\<NovyBroker>\` **a** řádky s `Broker=<NovyBroker>`; jiný formát exportu než XTB znamená upravit `read_export()` |
-| **měnu** | jen přidat do složky brokera soubor `EUR_*.xlsx` / `CZK_*.xlsx` |
+| **měnu** | soubor `EUR_*.xlsx` / `CZK_*.xlsx` do složky brokera **a** řádky s touto `Mena` |
 
 Ve skriptu se nemusí měnit nic dalšího — vlastníci, brokeři i měny se hledají
 procházením stromu. Jméno složky musí sedět na hodnotu ve sloupci (porovnává se
@@ -147,7 +171,7 @@ bez ohledu na velikost písmen a diakritiku).
 
 | Soubor | Co obsahuje | Odkud pochází |
 |---|---|---|
-| `D:\Work\Sporeni\Test\sporeni.xlsx` | přehled portfolia — **mimo repozitář** | ruční sešit uživatele |
+| `D:\Work\Finance\Test\sporeni.xlsx` | přehled portfolia — **mimo repozitář** | ruční sešit uživatele |
 | `…\Test\<Vlastnik>\<Broker>\<MENA>_*.xlsx` | exporty pozic — **mimo repozitář** | xStation 5 |
 | `data/xtb_sync_*.md` | co se při aktualizaci přepsalo, po vlastnících a brokerech, všechny měny | generuje `xtb_sync.py` |
 | `data/portfolio.csv` | **nepoužívá se** — ukázková data ze šablony (MSFT, CEZ.PR) | — |
@@ -157,7 +181,30 @@ bez ohledu na velikost písmen a diakritiku).
 | Skript | Co dělá |
 |---|---|
 | `scripts/xtb_sync.py` | přepíše Investovano a Hodnota v `sporeni.xlsx` podle exportu z XTB. Bez `--write` jen vypíše rozdíly. |
+| `scripts/update_rates.py` | přepíše kurzy k CZK v oblasti `Kurzy` podle denního kurzu ČNB. Bez `--write` jen vypíše. |
+| `scripts/_run.bat` + `sync_*.bat`, `kurzy_*.bat` | `.bat` obálky — dvojklik místo příkazové řádky, viz níže |
 | `scripts/snapshot.py` | **nepoužívá se** — stahuje ceny přes yfinance k `portfolio.csv`. Zbytek šablony. |
+
+### Spouštění bez příkazové řádky — `.bat` obálky
+
+Stejný vzor jako v projektu `backups`. Dvojklik na obálku ve `scripts/` sama najde
+venv, spustí skript z kořene repa, na konci vypíše `[OK]` / `[CHYBA]` a počká na klávesu.
+
+| Dvojklik na | Spustí | Píše do sešitu? |
+|---|---|---|
+| `sync_nanecisto.bat` | `xtb_sync.py --dry-run` | ne (jen report do `data/`) |
+| `sync_zapsat.bat` | `xtb_sync.py --write` | **ano** — před během se ptá (pause) |
+| `kurzy_nanecisto.bat` | `update_rates.py` | ne |
+| `kurzy_zapsat.bat` | `update_rates.py --write` | **ano** — před během se ptá (pause) |
+
+`_run.bat` je společný spouštěč (nespouštět přímo), přepne konzoli na UTF-8 kvůli
+češtině. Nový skript = nová obálka s jedním `call "%~dp0_run.bat" <skript.py> <parametry>`.
+
+**Odkazy mimo repo — `D:\Work\Skripty\Stocks-tracker\`.** Obálky z `scripts/` se
+nesmí kopírovat jinam (kořen repa hledají tři úrovně nad sebou). Ve složce mimo repo
+jsou proto stejnojmenné **odkazy**, které jen zavolají obálku v repu. Cesta k repu
+je jen v `_cesta.bat` v té složce — po přesunu repa se upraví jen tam. Složka se
+neverzuje (absolutní cesta ke stroji); nový skript = nový odkaz podle vzoru.
 
 ## Pravidla specifická pro tento projekt
 
@@ -171,26 +218,22 @@ bez ohledu na velikost písmen a diakritiku).
 - **Nikdy ho neotvírej a neukládej přes openpyxl ani pandas.** Má 10 grafů, tabulky
   a webextension, které přepis zahodí. `xtb_sync.py` proto zapisuje hodnoty přímo
   do XML uvnitř `.xlsx` a předtím dělá `.bak.xlsx` zálohu.
-- Měnit se smí **jen** sloupce Investovano a Hodnota v USD/EUR/CZK, a jen na řádcích
-  tabulky akcií. Všechno ostatní je uživatelovo — plán, kategorie, kurzy, vzorce,
-  součty pod tabulkou, ostatní listy.
+- Měnit se smí **jen** sloupce Investovano a Hodnota na řádcích tabulky akcií
+  (`xtb_sync.py`) a sloupec B oblasti `Kurzy` (`update_rates.py`). Všechno ostatní je
+  uživatelovo — plán, kategorie, vzorce, součty pod tabulkou, ostatní listy.
 - Sloupce se hledají podle **názvů v hlavičce**, řádky podle rozsahu tabulky. Nikdy
   je nezadávej natvrdo písmeny — každý vlastník má list jinak.
-- Účet u XTB je vedený v jedné měně, takže z jednoho exportu se plní jen jedna trojice
-  sloupců; ostatní měny jdou na 0, dokud pro ně nepřibude vlastní export. Platí to
-  i pro evropské tituly (Rheinmetall, voestalpine, SAAB, EURO STOXX 50) — XTB je
-  přepočítává do měny účtu.
+- Účet u XTB je vedený v jedné měně, takže jeden export plní jen řádky s touto `Mena`;
+  řádky jiné měny zůstanou beze změny, dokud pro ně nepřibude vlastní export.
 - Zaokrouhluje se na celá čísla — sešit tak má hodnoty od začátku.
 - **Kontrola po běhu:** součet sloupce Hodnota v dané měně musí sedět na
   `My Trades / Value` z hlavičky listu `Open Positions`. K 2026-08-13 to bylo 39 224 USD.
-- Páruje se podle názvu akcie (normalizovaně, bez mezer a diakritiky). Když se název
-  v exportu liší víc, patří dvojice do `ALIASES` ve skriptu — **ne přejmenování
-  řádku v sešitu**.
+- Páruje se podle tickeru ve sloupci `Nazev akcie`. Jen u řádků bez tickeru podle
+  názvu; když se název v exportu liší víc, patří dvojice do `ALIASES` ve skriptu.
 
 ## Otevřené otázky
 
 - Zahrnout dividendy do výnosu? Zatím ne.
-- Zdroj kurzu CZK/USD pro přepočty — zatím nevybrán, kurzy se zadávají ručně.
 - Řádek `NasdaQ` má kategorii „Fond", ale páruje se na `NDAQ.US`, což je akcie burzy
   Nasdaq, ne indexový fond. Ověřit, jestli je to zamýšlené.
 - Monika, Anetka a Adélka mají složky, ale **žádné řádky na listu `Akcie`**. Dokud
