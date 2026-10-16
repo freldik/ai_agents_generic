@@ -43,17 +43,19 @@ ne „až si vzpomenu". Proto **1. v měsíci je zálohovací den**.
 
 | Skupina | Jobů | Periodicita | Nastavení v GoodSync |
 |---|---|---|---|
-| **OneDrive** (`D:\OneDrive`) | 8 | **automaticky denně ve 22:00** | Job → Options → Auto → *Auto Sync: On Schedule*, denně 22:00 |
-| **Cloud** (`M:` WD MyCloud) | 7 | **ručně 1. v měsíci** | nechat *Auto Sync* vypnutý, spouštět z GUI |
+| **OneDrive** (`D:\OneDrive`) | 6 | **automaticky denně ve 22:00** | Job → Options → Auto → *Auto Sync: On Schedule*, denně 22:00 |
+| **Cloud** (`M:` WD MyCloud) | 9 | **ručně 1. v měsíci** | nechat *Auto Sync* vypnutý, spouštět z GUI |
 | **Ntb** (`N:` pracovní notebook) | 5 | **ručně 1. v měsíci** | dtto |
-| `Monika - Ntb` (`L:`) | 1 | **ručně 1. v měsíci**, když je notebook zapnutý | dtto; naposled 2025-07-27 |
-| **Disk WD** (USB My Passport) | 8 | **při připojení disku** — USB připojuješ 1. v měsíci | Auto → *On Device Connect* |
+| **Disk WD** (USB My Passport) | 10 | **při připojení disku** — USB připojuješ 1. v měsíci | Auto → *On Device Connect* |
+
+Skupiny Cloud a Disk WD obsahují i `Private - Cloud` / `Private - Disk WD` (`D:\Private`)
+a `Git - Cloud` / `Git - Disk WD` (`D:\Git`, git repozitáře) — obojí přidáno 2026-10-16. `D:\Private` záměrně **nemá** job do OneDrive ani na notebook.
 
 Jen OneDrive je bezpečné pouštět denně: je to lokální disk `D:`, žádná síť.
 22:00 je schválně pozdě večer, ať nekoliduje s ničím, co pouštíš ručně.
 
 **Zálohovací den 1. v měsíci** je tedy: připojit USB (rozjede se samo), v GoodSyncu
-ručně spustit skupiny Cloud, Ntb a Monika, nechat doběhnout. Čtyřikrát do roka
+ručně spustit skupiny Cloud a Ntb, nechat doběhnout. Čtyřikrát do roka
 k tomu přidáš `zalohy_ctvrtletni.bat` a ruční exporty ze sekce 3.
 
 GoodSync startuje s Windows, takže se nic neplánuje ve Správci úloh — periodicita
@@ -75,13 +77,13 @@ v GoodSyncu.
 | Perioda | Kdy | Co udělat | Kam to uložit |
 |---|---|---|---|
 | **měsíčně** | 1. v měsíci | **připojit USB disk My Passport** — joby se rozjedou samy | — |
-| **měsíčně** | 1. v měsíci | **v GoodSyncu ručně spustit** skupiny Cloud (`M:`), Ntb (`N:`) a Monika (`L:`) | — |
+| **měsíčně** | 1. v měsíci | **v GoodSyncu ručně spustit** skupiny Cloud (`M:`) a Ntb (`N:`) | — |
 | **čtvrtletně** | 1. 1. / 4. / 7. / 10. | **Home Assistant**: stáhnout zálohu z Nabu Casa | `D:\Work\Backup\HomeAssistant\` |
 | **čtvrtletně** | 1. 1. / 4. / 7. / 10. | **routery a AP**: export konfigurace (Mikrotik Attic, TP-Link Archer AX10 Obývák a Hůra, opakovače) | `D:\Work\Backup\Router\<zařízení>\` |
 | **čtvrtletně** | 1. 1. / 4. / 7. / 10. | **WD MyCloud**: export nastavení `.conf` | `D:\Work\Backup\WD MyCloud\` |
 | **čtvrtletně** | 1. 1. / 4. / 7. / 10. | **Thunderbird**: export pošty obou účtů | `D:\Work\Backup\Thunderbird\<účet>\RRRR_MM\` |
 | **čtvrtletně** | 1. 1. / 4. / 7. / 10. | **Todoist**: ruční export upomínek a úkolů | `D:\Work\Backup\Todoist\` |
-| **čtvrtletně** | 1. 1. / 4. / 7. / 10. | **hesla**: ruční záloha do OneDrive Osobního trezoru (Vault) | `D:\OneDrive\Osobní trezor\` |
+| **čtvrtletně** | 1. 1. / 4. / 7. / 10. | **hesla**: ruční záloha databáze hesel z `D:\Private\` do OneDrive Osobního trezoru (Vault) — jediná kopie mimo dům | `D:\OneDrive\Osobní trezor\` |
 | **čtvrtletně** | 1. 1. / 4. / 7. / 10. | **spustit `zalohy_ctvrtletni.bat`** — večer, běží hodiny (viz sekce 1) | — |
 | **čtvrtletně** | den poté | **projít `retence_report.md`** z předchozího běhu a případně spustit `retention.py --delete` | — |
 | **ročně** | leden | **zkouška obnovy** — viz níže | — |
@@ -114,8 +116,9 @@ Bod 3 je důležitý — HA zálohy se stahují ručně a nikdo se do nich nikdy
 
 Rozhodnuto 2026-08-10, ať se to znovu neotevírá:
 
-- **`D:\School` a `D:\Led neons`** — historické věci, stačí jedna kopie v OneDrive.
-  Nerozšiřovat na MyCloud ani USB.
-- **Obsah WD MyCloud** — druhá kopie je v OneDrive, samotný disk se nezálohuje.
-  Přehodnotit až s NAS.
-- **OpenHAB** — přešlo se na Home Assistant, položka je uzavřená.
+- **`One time backup`** (od 2026-10-16) — jednorázové RAR archivy `Led neons`, `School`,
+  `Monika` a `TFS Work Data`, uložené na MyCloud, USB i OneDrive, nijak se neobnovuje. Job tam nezakládat.
+  Podrobnosti v `inventory.md`.
+- **Obsah WD MyCloud** — samostatně se nezálohuje, všechno na něm má kopii i na USB
+  disku WD a na OneDrive (kromě `D:\Private`, které je jen na MyCloud a USB).
+  Budoucí NAS bude mít díky více diskům interní zálohu (RAID).
