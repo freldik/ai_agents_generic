@@ -45,11 +45,12 @@ ne „až si vzpomenu". Proto **1. v měsíci je zálohovací den**.
 |---|---|---|---|
 | **OneDrive** (`D:\OneDrive`) | 6 | **automaticky denně ve 22:00** | Job → Options → Auto → *Auto Sync: On Schedule*, denně 22:00 |
 | **Cloud** (`M:` WD MyCloud) | 9 | **ručně 1. v měsíci** | nechat *Auto Sync* vypnutý, spouštět z GUI |
-| **Ntb** (`N:` pracovní notebook) | 5 | **ručně 1. v měsíci** | dtto |
+| **Ntb** (`N:` pracovní notebook) | 6 | **ručně 1. v měsíci** | dtto |
 | **Disk WD** (USB My Passport) | 10 | **při připojení disku** — USB připojuješ 1. v měsíci | Auto → *On Device Connect* |
 
 Skupiny Cloud a Disk WD obsahují i `Private - Cloud` / `Private - Disk WD` (`D:\Private`)
-a `Git - Cloud` / `Git - Disk WD` (`D:\Git`, git repozitáře) — obojí přidáno 2026-10-16. `D:\Private` záměrně **nemá** job do OneDrive ani na notebook.
+a `Git - Cloud` / `Git - Disk WD` (`D:\Git`, git repozitáře) — obojí přidáno 2026-10-16.
+Skupina Ntb obsahuje od 2026-10-17 i `Private - Ntb`. `D:\Private` záměrně **nemá** job do OneDrive.
 
 Jen OneDrive je bezpečné pouštět denně: je to lokální disk `D:`, žádná síť.
 22:00 je schválně pozdě večer, ať nekoliduje s ničím, co pouštíš ručně.
@@ -120,5 +121,5 @@ Rozhodnuto 2026-08-10, ať se to znovu neotevírá:
   `Monika` a `TFS Work Data`, uložené na MyCloud, USB i OneDrive, nijak se neobnovuje. Job tam nezakládat.
   Podrobnosti v `inventory.md`.
 - **Obsah WD MyCloud** — samostatně se nezálohuje, všechno na něm má kopii i na USB
-  disku WD a na OneDrive (kromě `D:\Private`, které je jen na MyCloud a USB).
+  disku WD a na OneDrive (kromě `D:\Private`, které je na MyCloud, USB a notebooku).
   Budoucí NAS bude mít díky více diskům interní zálohu (RAID).

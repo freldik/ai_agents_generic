@@ -31,7 +31,7 @@ je nikdy nemaže ani nepřepisuje. V repu je jen dokumentace a skripty.
 | Skript | Co dělá |
 |---|---|
 | `scripts/discover.py` | prohledá stroj (disky, síťové jednotky, naplánované úlohy, umístění konfigurací) a zapíše report. Jen čte. |
-| `scripts/goodsync_jobs.py` | rozparsuje `%APPDATA%\GoodSync\jobs.tic` a vypíše všechny joby (2026-10-16: 31) jako tabulku. Jen čte. |
+| `scripts/goodsync_jobs.py` | rozparsuje `%APPDATA%\GoodSync\jobs.tic` a vypíše všechny joby (2026-10-17: 32) jako tabulku. Jen čte. |
 | `scripts/status.py` | pro každou položku najde nejnovější zálohu a porovná s intervalem; hlásí `PO TERMÍNU` / `stárne` / `ok`. `--md` uloží report. |
 | `scripts/backup_configs.py` | zazálohuje konfigurace GoodSync, Total Commander a nastavení Thunderbirdu do `D:\Work\Backup\`. `--dry-run` nejdřív. |
 | `scripts/backup_data.bat` | WinRAR archivace `D:\Others` a `D:\Projects` do `D:\Work\Backup\Data\<Kategorie>\`. Nahrazuje starý `D:\Work\Skripty\backup_data.bat`. |
@@ -53,8 +53,8 @@ cestu k repu v `_cesta.bat`). Podrobnosti v `data/skripty.md`.
   na všechny čtyři cíle. Nezakládej kvůli nové záloze nový GoodSync job a nevymýšlej
   nové cíle. **Pozor:** živá data (`D:\Projects`, `D:\Photos`, …) jdou do GoodSyncu
   přímo ze zdroje, ne přes `Backup\` — to jsou dvě různé větve, viz `data/inventory.md`.
-- **`D:\Private` jen na lokální cíle** (rozhodnuto 2026-10-16): joby `Private - Cloud`
-  (MyCloud) a `Private - Disk WD` (USB). Nikdy nenavrhuj OneDrive ani notebook, nekopíruj
+- **`D:\Private` nikdy na OneDrive** (rozhodnuto 2026-10-16, notebook přidán 2026-10-17): joby
+  `Private - Cloud` (MyCloud), `Private - Disk WD` (USB) a `Private - Ntb` (`N:`). Nikdy nenavrhuj OneDrive, nekopíruj
   nic z `D:\Private` do `D:\Work\Backup\` a nebal ho do RAR. Databáze hesel v něm jde
   na OneDrive jen ručně do Osobního trezoru (položka `hesla`).
 - **Nikdy nemaž ani nepřepisuj existující zálohu.** Každý běh vytvoří nový datovaný
@@ -81,7 +81,7 @@ cestu k repu v `_cesta.bat`). Podrobnosti v `data/skripty.md`.
   složka `One time backup` na MyCloud, USB i OneDrive obsahuje jen jednorázové
   RAR archivy (`Led neons`, `School`, `Monika`, `TFS Work Data`) — žádný job, nic
   se do ní nepřidává ani nemaže; WD MyCloud se samostatně nezálohuje — jeho obsah má kopii na USB disku WD a na OneDrive
-  (kromě `D:\Private`: jen MyCloud + USB). Interní redundanci přinese až NAS s více disky.
+  (kromě `D:\Private`: MyCloud + USB + notebook). Interní redundanci přinese až NAS s více disky.
 
 ## Otevřené otázky
 

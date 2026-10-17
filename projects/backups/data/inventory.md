@@ -8,7 +8,7 @@ vypíše `scripts/status.py`.
 
 Dvě nezávislé větve, které se nesmí splést:
 
-**1. Živá data — GoodSync, 31 jobů, přímo ze zdroje**
+**1. Živá data — GoodSync, 32 jobů, přímo ze zdroje**
 
 ```
 D:\Projects, Photos, Photos_XXX, Electronics, Others, Work, SVN, Git
@@ -16,9 +16,10 @@ D:\Projects, Photos, Photos_XXX, Electronics, Others, Work, SVN, Git
    ├── =My Passport:\...            USB disk (+ C:\...\AppData) 9 jobů
    ├── N:\...                       pracovní notebook           5 jobů
    └── D:\OneDrive\Backup\...       OneDrive (bez Git)          6 jobů
-D:\Private  (jen lokální cíle — nikdy OneDrive ani notebook)
+D:\Private  (nikdy OneDrive)
    ├── M:\Backup\Desktop\Private    WD MyCloud                  Private - Cloud
-   └── =My Passport:\Private        USB disk                    Private - Disk WD
+   ├── =My Passport:\Private        USB disk                    Private - Disk WD
+   └── N:\Private                   pracovní notebook           Private - Ntb
 P:\Work\Stock ──> D:\Work\Backup\Stock     (z MyCloud na lokál, pull)
 ```
 
@@ -78,7 +79,7 @@ Do té doby ji `status.py` hlásí jako po termínu — je to správně, ne chyb
 | WD MyCloud `P:` (`\\WDMYCLOUD\Public`) | trvale, OK | zdroj pro `Stock - DB` | 2026-08-09 |
 | USB disk „My Passport" | ručně připojovaný | GoodSync, 10 jobů (vč. `Private - Disk WD`) | 2026-07-26 |
 | OneDrive (`D:\OneDrive`) | trvale | GoodSync 6 jobů + klient OneDrive | 2026-07-26 |
-| Pracovní notebook `N:` | po síti, teď odpojený | GoodSync, 5 jobů | 2026-08-09 |
+| Pracovní notebook `N:` | po síti, teď odpojený | GoodSync, 6 jobů (vč. `Private - Ntb`) | 2026-08-09 |
 
 ## Rozhodnutí 2026-08-10
 
@@ -88,8 +89,8 @@ Do té doby ji `status.py` hlásí jako po termínu — je to správně, ne chyb
   leží v `One time backup` (viz níže) a žádný GoodSync job nemají.
 - **WD MyCloud se samostatně nezálohuje** — nemá to smysl, protože všechno, co na
   něm je, má další kopii jinde: na USB disku WD a na OneDrive. Výjimka je
-  `D:\Private`, které jde jen na MyCloud a USB, nikdy na OneDrive (viz rozhodnutí
-  2026-10-16). Samotný MyCloud má jen jeden disk a žádnou vnitřní redundanci.
+  `D:\Private`, které jde na MyCloud, USB a notebook, nikdy na OneDrive (viz rozhodnutí
+  2026-10-16 a 2026-10-17). Samotný MyCloud má jen jeden disk a žádnou vnitřní redundanci.
 - **Až bude NAS** (plánováno, termín neurčen), bude mít díky více diskům vlastní
   interní zálohu (RAID) — odolnost proti selhání disku přímo v zařízení. Pak se
   překreslí topologie, viz Otevřené otázky.
@@ -119,8 +120,8 @@ Neobnovují se — žádný GoodSync job, skript ani připomínka.
 - Nová složka **`D:\Private`** se soukromými věcmi. Zálohuje se **jen na lokální cíle**:
   WD MyCloud (`Private - Cloud` → `M:\Backup\Desktop\Private`) a USB disk
   (`Private - Disk WD` → `=My Passport:\Private`).
-- **Nikdy na OneDrive ani na notebook** — žádný job `OneDrive - Private` / `Private - Ntb`
-  nezakládat. Proto `D:\Private` taky **nepatří do `D:\Work\Backup\`** (ten replikují
+- **Nikdy na OneDrive** — žádný job `OneDrive - Private` nezakládat. (Původně i zákaz
+  notebooku; zrušen 2026-10-17, job `Private - Ntb`.) Proto `D:\Private` taky **nepatří do `D:\Work\Backup\`** (ten replikují
   `Work` joby na OneDrive i notebook) a nebalí se do RAR v `backup_data.bat`.
 - V `D:\Private` leží i **databáze hesel**. GoodSync ji tím dostane na MyCloud a USB;
   kopii mimo dům dělá dál jen ruční čtvrtletní záloha do OneDrive Osobního trezoru
@@ -128,6 +129,17 @@ Neobnovují se — žádný GoodSync job, skript ani připomínka.
   ručně, do zamčeného trezoru.
 - Periodicita jako ostatní skupiny: Cloud ručně 1. v měsíci, Disk WD při připojení USB.
 - Oba joby ověřeny v `jobs.tic` 2026-10-16.
+- **Změněno 2026-10-17:** `D:\Private` se zálohuje i na pracovní notebook, viz níže.
+
+## Rozhodnutí 2026-10-17 — `D:\Private` i na notebook
+
+- Přidán job **`Private - Ntb`** (`D:\Private` → `N:\Private`), ověřen v `jobs.tic`
+  2026-10-17. Ruší zákaz notebooku z 2026-10-16; **zákaz OneDrive platí dál**.
+- Na notebook tím jde i **databáze hesel** z `D:\Private`. Ruční záloha do OneDrive
+  Osobního trezoru (`hesla`) zůstává jedinou kopií v cloudu.
+  Pozor: pracovní notebook opouští dům — databáze hesel musí zůstat zašifrovaná.
+- Periodicita jako ostatní Ntb joby: ručně 1. v měsíci.
+- `D:\Private` dál nepatří do `D:\Work\Backup\` ani do RAR — `Work` joby jdou i na OneDrive.
 
 ## Co je slabé místo
 
